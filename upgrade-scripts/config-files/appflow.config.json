@@ -1,0 +1,6 @@
+{
+    "apps": [{
+        "appId": "33714811",
+        "dependencyInstallCommand": "node ./pre-npm-i.mjs && npm i"
+    }]
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Reduced War Generator Ant Script File Denisk Haddad-->
+
+<project name="reduced_war_generator" basedir=".">
+
+	<path id="lib.classpath">
+			
+	</path>
+	<tstamp prefix="build-info">
+		<format property="current-date" pattern="d-MMMM-yyyy" locale="en" />
+		<format property="current-time" pattern="hh:mm:ss a z" locale="en" />
+	</tstamp>
+	<target name="DoGenerateReducedWar">
+		
+		<antcall target="Compile_Constant_Common_template"></antcall>
+		
+		<antcall target="Replacing-APP-Version-in-ConstantsCommon.java">
+		</antcall>
+		
+		<antcall target="Compile_Reduced_War_Files">
+		</antcall>
+		
+		<antcall target="Build-Reduced-War">
+		</antcall>
+	</target>
+	
+	
+	<target name="Build-Reduced-War">
+			<echo message="========================================================="/>
+			<echo message="Build Reduced WAR File"/>
+			<echo message="========================================================="/>
+			
+			
+			<!--genarate the Reduced WAR file-->
+			<war warfile="${generator.reduced.out.directory}/${generator.reduced.app}_${generator.reduced.app.version}.war"
+				needxmlfile="false">
+				<fileset dir="${generator.destination_compiled_directory}/">
+				</fileset>
+
+				<manifest>
+					<attribute name="Built-By" value="Reduced War Generator" />
+					<attribute name="Built-On" value="${build-info.current-date}" />
+					<attribute name="Built-At" value="${build-info.current-time}" />
+					<attribute name="Internal-Reduced-Id" value="${generator.reduced.internal.day}" />
+				</manifest>
+			</war>
+			
+			<echo message="========================================================="/>
+			<echo message="Build Reduced WAR File is completed"/>
+			<echo message="========================================================="/>
+	</target> 
+
+    <target name="Compile_Reduced_War_Files" >
+    
+		
+		<javac classpathref="lib.classpath" fork="yes"
+				debug="true" nowarn="true" encoding="UTF-8"  
+				destdir="${generator.destination_compiled_directory}/WEB-INF/classes"
+				memoryinitialsize="512m" memorymaximumsize="1024m"
+					
+		>	
+			<!--  includeantruntime="no" executable="${JAVAC_JDK}" -->
+			<src path="${generator.source_code_directory}"/>
+			<exclude name="**/*.svn"/>
+		</javac>
+	
+	</target>
+	
+	<target name="Compile_Constant_Common_template" >
+	<!-- Copy application resources -->
+		<copy file="${generator.reduced.constantcommon.template}" todir="${generator.source_code_directory}/com/path/bo/common">
+		</copy>
+	</target>
+	
+	
+	<!--replace the Version in ConstantsCommon.java class-->
+	<target name="Replacing-APP-Version-in-ConstantsCommon.java">
+		<echo message="========================================================="/>
+		<echo message="Start Replace APP_VERSION in ConstantsCommon.java &#x0A;by the new Reduced Version ${generator.reduced.app.version}"/>
+		<echo message="========================================================="/>
+		
+		<replaceregexp file="${generator.source_code_directory}/com/path/bo/common/ConstantsCommon.java"
+		match="String[ ]+APP_VERSION[ ]*=[ ]*&quot;[0-9A-Za-z \\.]+&quot;[ ]*;"
+		replace="String APP_VERSION = &quot;${generator.reduced.app.version}&quot;;"
+		byline="true"/>
+		
+		
+		<replaceregexp file="${generator.source_code_directory}/com/path/bo/common/ConstantsCommon.java"
+		match="String APP_INTERNAL_BUILD_VERSION = &quot;[0-9A-Za-z \\.]+&quot;;"
+		replace="String APP_INTERNAL_BUILD_VERSION = &quot;${generator.reduced.internal.day}&quot;;"
+		byline="true"/>
+		
+			
+		<replaceregexp file="${generator.source_code_directory}/com/path/bo/common/ConstantsCommon.java"
+		match="String[ ]+APP_NAME[ ]*=[ ]*&quot;[0-9A-Za-z \\.]+&quot;[ ]*;"
+		replace="String APP_NAME = &quot;${generator.reduced.app}&quot;;"
+		byline="true"/>
+			
+			<replaceregexp file="${generator.source_code_directory}/com/path/bo/common/ConstantsCommon.java"
+				match="String[ ]+DISPlAY_APP_VERSION[ ]*=[ ]*&quot;[0-9A-Za-z \\.\\*\\t]+&quot;[ ]*;"
+				replace="String DISPlAY_APP_VERSION = &quot;Reduced ${generator.reduced.app} ${generator.reduced.app.version}&quot;;"
+				byline="true"/>
+		
+
+		<echo message="========================================================="/>
+		<echo message="Finish Replace APP_VERSION in ConstantsCommon.java &#x0A;by the new REduced Version ${generator.reduced.app.version}"/>
+		<echo message="========================================================="/>
+    </target>
+    
+    <target name="DoDeleteDirectory">
+    	<echo message="Start Deleting Directory ${source.directory.to.delete}"/> 
+    	<delete dir="${source.directory.to.delete}" failonerror="false" />
+    	<echo message="Finished Deleting Directory ${source.directory.to.delete}"/> 
+    </target>
+	 
+</project>

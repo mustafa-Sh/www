@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.azentio.omnibk" version="303.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>OmniBK</name>
+    <description>Omni Banking Application</description>
+    <author email="info@path-solutions.com" href="https://path-solutions.com/">Path-Solutions Omni Banking Team</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="ScrollEnabled" value="false" />
+    <preference name="android-minSdkVersion" value="29" />
+    <preference name="android-targetSdkVersion" value="35" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="FadeSplashScreenDuration" value="500" />
+    <preference name="SplashScreenDelay" value="6000" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="" />
+    <preference name="GOOGLE_MAPS_IOS_API_KEY" value="" />
+    <preference name="DisableDeploy" value="false" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+	<preference name="WKWebViewOnly" value="true" />
+    <preference name="cordova.plugins.diagnostic.modules" value="" />
+	<preference name="scheme" value="https" />
+    <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
+        <string>Requires access to your phone's camera.</string>
+    </config-file>
+    <platform name="android">
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/icon.png" />
+        <preference name="AndroidWindowSplashScreenAnimationDuration" value="500"/>
+        <preference name="AndroidWindowSplashScreenBackground" value="#FFFFFF" />
+		<preference name="AndroidWindowSplashScreenIconBackgroundColor" value="#FFFFFF" />
+        <preference name="FirebaseAnalyticsEnabled" value="false" />
+        <hook src="pluginsJavascriptObfuscation.js" type="after_prepare" />
+        <hook src="modifyAdvancedHttpPlugin.js" type="after_prepare" />
+        <hook src="path_config_before_compile.js" type="before_compile" />
+        <hook src="add_firebase_initialization.js" type="before_compile" />
+        <hook src="path_config_after_build.js" type="after_build" />
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest">
+            <manifest xmlns:tools="http://schemas.android.com/tools" />
+        </edit-config>
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+            <application android:networkSecurityConfig="@xml/network_security_config" />
+            <application android:allowBackup="false" />
+        </edit-config>
+        <config-file parent="/manifest/application" target="app/src/main/AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+			<provider
+                android:name="com.google.firebase.provider.FirebaseInitProvider"
+                android:authorities="${applicationId}.firebaseinitprovider"
+                android:exported="false"
+                tools:node="remove" />
+        </config-file>
+        <config-file parent="/manifest/application" target="app/src/main/AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+            <activity android:exported="false" android:name="com.exxbrain.android.biometric.DeviceCredentialHandlerActivity" tools:replace="android:exported" />
+        </config-file>
+        <config-file parent="/manifest/application" target="app/src/main/AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+            <activity android:exported="false" android:name="androidx.biometric.DeviceCredentialHandlerActivity" tools:replace="android:exported" />
+        </config-file>
+        <resource-file src="resources/android/xml/network_security_config.xml" target="app/src/main/res/xml/network_security_config.xml" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
+		<allow-intent href="market:*" />
+        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+    </platform>
+    <platform name="ios">
+        <preference name="deployment-target" value="16.0" />
+    	<resource-file src="GoogleService-Info.plist"/>
+        <hook src="PathXcodeRunScript.js" type="after_prepare" />
+        <allow-navigation href="https://www.google.com/recaptcha/*" />
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>This app requires access to your camera in order to take photo of your personal ID for verification and processing purpose.</string>
+        </edit-config>
+		<edit-config file="*-Info.plist" mode="merge" target="NSAppTransportSecurity">
+		      <dict>
+		            <key>NSAllowsArbitraryLoads</key>
+		            <false/>
+		      </dict>
+		</edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
+           <string>This app requires access to the photo library in order to upload photos of your personal ID for verification and processing purpose.</string>
+       </edit-config>
+       	<edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>This app requires access to the photo library in order to upload photos of your personal ID for verification and processing purpose.</string>
+       </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>This app requires access to your location in order to track your position, even when the screen is off or the app is in the background</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>This app requires access to your location in order to show the nearby ATMs and branches and to show the nearest one to your current location.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>This app requires access to your location in order to show the nearby ATMs and branches and to show the nearest one to your current location.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="LSApplicationQueriesSchemes">
+            <array>
+                <string>cydia</string>
+                <string>activator</string>
+                <string>filza</string>
+                <string>sileo</string>
+                <string>undecimus</string>
+                <string>zbra</string>
+            </array>
+        </edit-config>
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <icon height="57" src="resources/ios/icon/icon.png" width="57" />
+        <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
+        <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
+        <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
+        <icon height="20" src="resources/ios/icon/icon-20.png" width="20" />
+        <icon height="40" src="resources/ios/icon/icon-20@2x.png" width="40" />
+        <icon height="60" src="resources/ios/icon/icon-20@3x.png" width="60" />
+        <icon height="48" src="resources/ios/icon/icon-24@2x.png" width="48" />
+        <icon height="55" src="resources/ios/icon/icon-27.5@2x.png" width="55" />
+        <icon height="29" src="resources/ios/icon/icon-29.png" width="29" />
+        <icon height="58" src="resources/ios/icon/icon-29@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/icon-29@3x.png" width="87" />
+        <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
+        <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
+        <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120" />
+        <icon height="88" src="resources/ios/icon/icon-44@2x.png" width="88" />
+        <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
+        <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
+        <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
+        <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
+        <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
+        <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
+        <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
+        <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
+        <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
+        <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167" />
+        <icon height="172" src="resources/ios/icon/icon-86@2x.png" width="172" />
+        <icon height="196" src="resources/ios/icon/icon-98@2x.png" width="196" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
+        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
+        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
+        <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
+        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
+        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
+        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
+        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
+        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
+        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+        <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
+        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
+    </platform>
+    <plugin name="cordova-plugin-statusbar" spec="2.4.3" />
+    <plugin name="cordova-plugin-device" spec="3.0.0" />
+    <plugin name="cordova-plugin-ionic-webview" spec="5.0.0" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-plugin-email-composer" spec="~0.9.2">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+    </plugin>
+    <plugin name="cordova-plugin-device-orientation" spec="^2.0.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="3.1.0" />
+    <plugin name="cordova-plugin-telerik-imagepicker" spec="2.3.5" />
+    <plugin name="cordova-plugin-uniquedeviceid" spec="1.3.2" />
+    <plugin name="cordova-plugin-crop" spec="0.4.0" />
+    <plugin name="phonegap-plugin-barcodescanner" spec="8.1.0">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+    </plugin>
+    <plugin name="cordova-plugin-camera" spec="https://github.com/Azentio-Software/cordova-plugin-camera-8.0.0.git">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+        <variable name="ANDROIDX_CORE_VERSION" value="1.6.+" />
+    </plugin>
+    <engine name="browser" spec="5.0.4" />
+</widget>
